@@ -1,0 +1,18 @@
+﻿@model Applicant
+@{
+    ViewData["Title"] = "Confirmation";
+}
+
+<h1>Confirmation</h1>
+@Model.Name<br />
+@Model.email<br />
+@Model.phone<br />
+@Model.job_pos<br />
+@Model.des_sal<br />
+@Model.dateTime<br />
+@foreach(IFormFile formFile in Model.Files)
+{
+    @formFile.FileName<br />
+}
+<p>This application has been submitted!</p>
+

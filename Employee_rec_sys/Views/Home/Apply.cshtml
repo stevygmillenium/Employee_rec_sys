@@ -1,0 +1,16 @@
+﻿@model Applicant
+@{
+    ViewData["Title"] = "Apply";
+}
+
+<h1>Apply</h1>
+<form id="apply" method="post" action="Confirmation" enctype="multipart/form-data">
+    @Html.TextBox("name", null, new { placeholder = "name" })<br />
+    @Html.TextBox("email", null, new { placeholder ="email"})<br />
+    @Html.TextBox("phone", null, new { placeholder ="phone number"})<br />
+    @Html.TextBox("job_pos", null, new { placeholder ="job position"})<br />
+    @Html.TextBox("des_sal", null, new { placeholder ="desired salary"})<br />
+    <input type="file" asp-for="Files" multiple /><br />
+    <input type="submit" />
+</form>
+

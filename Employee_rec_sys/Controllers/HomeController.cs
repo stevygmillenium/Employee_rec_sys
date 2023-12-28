@@ -1,5 +1,6 @@
 ﻿using Employee_rec_sys.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlClient;
 using System.Diagnostics;
 
 namespace Employee_rec_sys.Controllers
@@ -29,12 +30,25 @@ namespace Employee_rec_sys.Controllers
         [HttpPost]
         public IActionResult Confirmation([Bind(include:"Name,email,phone,job_pos,des_sal,Files")]Applicant appl) 
         {
+            string constr = "";
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            sqlConnection.Open();
+            SqlCommand sqlCommand=new SqlCommand(constr,sqlConnection);
+            sqlCommand.Connection=sqlConnection;
+            sqlCommand.CommandText = "";
             appl.dateTime=DateTime.Now;
             return View(appl);
         }
         public IActionResult Rec_admin() 
         {
+            string constr = "";
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = "";
             Applicant applicant=new Applicant();
+            sqlCommand.CommandText = "";
             List<appl_files>appl_Files=new List<appl_files>();
             applicant.appl_files=appl_Files;
             return View(applicant);

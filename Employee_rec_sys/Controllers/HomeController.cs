@@ -34,7 +34,10 @@ namespace Employee_rec_sys.Controllers
         }
         public IActionResult Rec_admin() 
         {
-            return View();
+            Applicant applicant=new Applicant();
+            List<appl_files>appl_Files=new List<appl_files>();
+            applicant.appl_files=appl_Files;
+            return View(applicant);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

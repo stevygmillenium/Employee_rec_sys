@@ -3,14 +3,73 @@
     ViewData["Title"] = "Apply";
 }
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    form {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"], input[type="email"], input[type="tel"], input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #45a049;
+        
+    }
+
+    label {
+        margin-top: 10px;
+        display: block;
+    }
+</style>
+
 <h1>Apply</h1>
 <form id="apply" method="post" action="Confirmation" enctype="multipart/form-data">
-    @Html.TextBox("name", null, new { placeholder = "name" })<br />
-    @Html.TextBox("email", null, new { placeholder ="email"})<br />
-    @Html.TextBox("phone", null, new { placeholder ="phone number"})<br />
-    @Html.TextBox("job_pos", null, new { placeholder ="job position"})<br />
-    @Html.TextBox("des_sal", null, new { placeholder ="desired salary"})<br />
-    <input type="file" asp-for="Files" multiple /><br />
-    <input type="submit" />
-</form>
+    <label for="name">Name</label>
+    @Html.TextBox("name", null, new { @type = "text", placeholder = "Enter your name" })
 
+    <label for="email">Email</label>
+    @Html.TextBox("email", null, new { @type = "email", placeholder = "Enter your email" })
+
+    <label for="phone">Phone Number</label>
+    @Html.TextBox("phone", null, new { @type = "tel", placeholder = "Enter your phone number" })
+
+    <label for="job_pos">Job Position</label>
+    @Html.TextBox("job_pos", null, new { @type = "text", placeholder = "Desired job position" })
+
+    <label for="des_sal">Desired Salary</label>
+    @Html.TextBox("des_sal", null, new { @type = "text", placeholder = "Enter desired salary" })
+
+    <label for="Files">Upload Resume</label>
+    <input type="file" asp-for="Files" multiple />
+
+    <input type="submit" value="Submit Application" />
+</form>

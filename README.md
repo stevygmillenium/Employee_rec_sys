@@ -1,5 +1,5 @@
 # Employee_rec_sys
-# Employee recruit(ing/ment) syste
+# Employee recruit(ing/ment) system
 # Employee Recruitment System (Employee_rec_sys) 👨‍💼
 
 ## Overview 👁️

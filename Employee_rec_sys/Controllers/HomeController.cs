@@ -31,7 +31,8 @@ namespace Employee_rec_sys.Controllers
         [HttpPost]
         public IActionResult Confirmation([Bind(include:"Name,email,phone,job_pos,des_sal,Files")]Applicant appl) 
         {
-            string constr = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=emp_rec_sys;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+            var builder = WebApplication.CreateBuilder();
+            string constr = builder.Configuration.GetConnectionString("Default");
             SqlConnection sqlConnection = new SqlConnection(constr);
             sqlConnection.Open();
             SqlCommand sqlCommand=new SqlCommand(constr,sqlConnection);
@@ -70,29 +71,45 @@ namespace Employee_rec_sys.Controllers
             return View(appl);
         }
         public IActionResult appl_searc() 
-        {
-            string constr = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=emp_rec_sys;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
-            SqlConnection sqlConnection = new SqlConnection(constr);
-            sqlConnection.Open();
-            SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
-            sqlCommand.Connection = sqlConnection;
-            sqlCommand.CommandText = "select * from";
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-            List<Applicant> applicants = new List<Applicant>();
-            return View(applicants);
+        {            
+            return View();
         }
-        public IActionResult Rec_admin() 
+        [HttpPost]
+        public IActionResult Rec_admin(IFormCollection keyValues) 
         {
-            string constr = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=emp_rec_sys;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
+            int id = Convert.ToInt16(keyValues["hf"]);
+            var builder = WebApplication.CreateBuilder();
+            string constr = builder.Configuration.GetConnectionString("Default");
             SqlConnection sqlConnection = new SqlConnection(constr);
             sqlConnection.Open();
             SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
             sqlCommand.Connection = sqlConnection;
-            sqlCommand.CommandText = "select * from";            
+            sqlCommand.CommandText = "select * from [dbo].[Table] where id="+id;
+            SqlDataReader sqlDataReader; 
+            sqlDataReader = sqlCommand.ExecuteReader();
+            sqlDataReader.Read();
             Applicant applicant=new Applicant();
-            sqlCommand.CommandText = "select * from";
+            applicant.Id = (int)sqlDataReader["id"];
+            applicant.Name = (string)sqlDataReader["name"];
+            applicant.email = (string)sqlDataReader["email"];
+            applicant.phone = (string)sqlDataReader["phone"];
+            applicant.job_pos = (string)sqlDataReader["job_pos"];
+            applicant.des_sal = (double)sqlDataReader["des_sal"];
+            applicant.dateTime = (DateTime)sqlDataReader["dateTime"];
+            sqlConnection.Close();
+            sqlConnection.Open();
+            sqlCommand.CommandText = "select * from sel_File where email='"+applicant.email+"'";
+            sqlDataReader = sqlCommand.ExecuteReader();
             List<appl_files>appl_Files=new List<appl_files>();
+            while (sqlDataReader.Read()) 
+            {
+                appl_files appl_File = new appl_files();
+                appl_File.filename =(string) sqlDataReader["filename"];
+                appl_File.filetype =(string) sqlDataReader["filetype"];
+                appl_Files.Add(appl_File);
+            }
             applicant.appl_files=appl_Files;
+            sqlConnection.Close();
             return View(applicant);
         }
 

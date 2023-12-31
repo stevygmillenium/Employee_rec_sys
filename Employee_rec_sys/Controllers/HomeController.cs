@@ -106,6 +106,7 @@ namespace Employee_rec_sys.Controllers
                 appl_files appl_File = new appl_files();
                 appl_File.filename =(string) sqlDataReader["filename"];
                 appl_File.filetype =(string) sqlDataReader["filetype"];
+                appl_File.data =(byte[]) sqlDataReader["data"];
                 appl_Files.Add(appl_File);
             }
             applicant.appl_files=appl_Files;

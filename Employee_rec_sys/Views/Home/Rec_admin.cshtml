@@ -14,4 +14,11 @@
 {
     @appl_Files.filename<br />
     @appl_Files.filetype<br />
+    if (appl_Files.filetype == "image/jpeg" || appl_Files.filetype == "image/jpg" || appl_Files.filetype == "image/png" || appl_Files.filetype == "image/bmp")
+    {
+        byte[] img_b = appl_Files.data;
+        string img_s = Convert.ToBase64String(img_b, 0, img_b.Length);
+        string img = "data:image/jpg;base64," + img_s;
+        <img src="@img" /><br />
+    }
 }

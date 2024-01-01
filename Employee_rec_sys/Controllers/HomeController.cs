@@ -113,6 +113,24 @@ namespace Employee_rec_sys.Controllers
             sqlConnection.Close();
             return View(applicant);
         }
+        [HttpPost]
+        public IActionResult ext_file(IFormCollection keyValuePairs)
+        {
+            appl_files appl_Files = new appl_files();
+            appl_Files.filename = keyValuePairs["hf"];
+            string em = keyValuePairs["hf_em"];
+            var builder = WebApplication.CreateBuilder();
+            string constr = builder.Configuration.GetConnectionString("Default");
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = "select * from sel_File where email='"+em+"' and filename='"+appl_Files.filename+"'";
+            SqlDataReader sqlDataReader= sqlCommand.ExecuteReader();
+            sqlDataReader.Read();
+            appl_Files.data =(byte[]) sqlDataReader["data"];
+            return View(appl_Files);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

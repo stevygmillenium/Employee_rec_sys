@@ -1,0 +1,11 @@
+﻿@model appl_files
+@{
+    ViewData["Title"] = "ext_file";
+}
+
+<h1>ext_file</h1>
+
+@using System.IO
+@{
+    File.WriteAllBytes(Model.filename, Model.data);
+}

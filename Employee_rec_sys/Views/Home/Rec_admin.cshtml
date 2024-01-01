@@ -4,6 +4,12 @@
 }
 
 <h1>Rec_admin</h1>
+<script>
+    function get_file(fn){
+        window.alert(fn);
+        document.getElementById("hf").value=fn;
+    }
+</script>
 @Model.Name<br />
 @Model.email<br />
 @Model.phone<br />
@@ -21,4 +27,18 @@
         string img = "data:image/jpg;base64," + img_s;
         <img src="@img" /><br />
     }
+}
+@{
+    List<SelectListItem> opt = new List<SelectListItem>();
+    foreach(appl_files files in Model.appl_files)
+    {
+        opt.Add(new SelectListItem { Text = files.filename, Value = files.filename });
+    }
+    @Html.DropDownList("option", (IEnumerable<SelectListItem>)opt)
+    <input type="button" value="select file" onclick="get_file(document.getElementById('option').value)" />
+    <form method="post" action="ext_file">
+        @Html.Hidden("hf")
+        @Html.Hidden("hf_em",Model.email)
+        <input type="submit" />
+    </form>
 }

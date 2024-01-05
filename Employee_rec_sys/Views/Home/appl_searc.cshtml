@@ -9,11 +9,28 @@
         window.alert(id);
         document.getElementById("hf").value=id;
     }
+    function budget_check(obj,amt) {
+        var emp = JSON.parse(obj);
+        var lst="",count=0;
+        for (var i = 0; i < emp.length; i++) {
+            if (emp[i].des_sal <= amt) {
+                lst += emp[i].Id + " " + emp[i].des_sal + "\n";
+                count++;
+            }
+        }
+        window.alert(count + " applicants\n"+ lst);
+    }
 </script>
 @using System.Data.SqlClient
+@using System.Text
+@using System.Text.Json
+@using System.Text.Json.Nodes
+@using System.Text.Json.Serialization
 @{
-    List<Applicant> applicants = new List<Applicant>();
+    List<Applicant> applicants = new List<Applicant>();    
     get_appl(out applicants);
+    var j_data = JsonSerializer.Serialize(applicants);
+    <input id="hf_emp" type="hidden" value="@j_data" />
     foreach(Applicant applicant in applicants)
     {
         @applicant.Id @applicant.Name @applicant.email @applicant.phone @applicant.job_pos @applicant.des_sal @applicant.dateTime<br />
@@ -28,6 +45,8 @@
         @Html.Hidden("hf")
         <input type="submit" />
     </form>
+    <input id="max_amt" type="number" />
+    <input type="button" value="get applicants" onclick="budget_check(document.getElementById('hf_emp').value,document.getElementById('max_amt').value)" />
 }
 @functions{
     public void get_appl(out List<Applicant> applicants){
@@ -39,7 +58,7 @@
         sqlCommand.Connection = sqlConnection;
         sqlCommand.CommandText = "select * from [dbo].[table]";
         SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-        applicants = new List<Applicant>();
+        applicants = new List<Applicant>();        
         while (sqlDataReader.Read())
         {
             Applicant applicant = new Applicant();
@@ -50,7 +69,7 @@
             applicant.job_pos =(string) sqlDataReader["job_pos"];
             applicant.des_sal =(double) sqlDataReader["des_sal"];
             applicant.dateTime =(DateTime) sqlDataReader["dateTime"];
-            applicants.Add(applicant);
+            applicants.Add(applicant);            
         }
-    }
+    }    
 }

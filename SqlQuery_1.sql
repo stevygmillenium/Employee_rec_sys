@@ -16,3 +16,8 @@ CREATE TABLE [dbo].[sel_File] (
     [data]     VARBINARY (MAX) NULL,
     [email]    VARCHAR (150)   NULL
 );
+CREATE TABLE [dbo].[emp_prof] (
+    [email] VARCHAR (150) NULL,
+    [edu]   XML           NULL,
+    [work]  XML           NULL
+);

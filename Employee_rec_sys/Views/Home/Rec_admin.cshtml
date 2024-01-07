@@ -41,4 +41,12 @@
         @Html.Hidden("hf_em",Model.email)
         <input type="submit" />
     </form>
+    <form method="post" action="add_prof">
+        <label for="edu">education history</label><br />
+        @Html.TextArea("edu", "inst,area of study,1999/1/1,2000/1/1", new { @cols = "100", @rows = "2" })<br />
+        <label for="">work history</label><br />
+        @Html.TextArea("work", "org,job title,2001/1/1,2002/1/1", new { @cols = "100", @rows = "2" })<br />
+        <input name="p_em" type="email" value="@Model.email" />
+        <input type="submit" />
+    </form>
 }

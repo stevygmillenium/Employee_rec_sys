@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Text;
 
 namespace Employee_rec_sys.Controllers
 {
@@ -130,6 +133,71 @@ namespace Employee_rec_sys.Controllers
             sqlDataReader.Read();
             appl_Files.data =(byte[]) sqlDataReader["data"];
             return View(appl_Files);
+        }
+        [HttpPost]
+        public IActionResult add_prof(IFormCollection keyValues) 
+        {
+            string edu_h = keyValues["edu"], work_h = keyValues["work"];
+            Applicant applicant = new Applicant();
+            applicant.email = keyValues["p_em"];
+            List<edu_hist> edu = new List<edu_hist>();
+            string[] edu_hist = edu_h.Split('\n');
+            for (int i = 0; i < edu_hist.Length; i++)
+            {
+                string[] edu_inst = edu_hist[i].Split(',');
+                edu_hist e_h = new edu_hist();
+                e_h.inst = edu_inst[0];
+                e_h.area_of_study = edu_inst[1];
+                e_h.start = Convert.ToDateTime(edu_inst[2]);
+                e_h.fin = Convert.ToDateTime(edu_inst[3]);
+                edu.Add(e_h);
+            }
+            List<work_hist> work = new List<work_hist>();
+            string[] work_hist = work_h.Split('\n');
+            for (int i = 0; i < work_hist.Length; i++)
+            {
+                string[] work_org = work_hist[i].Split(',');
+                work_hist w_h = new work_hist();
+                w_h.org = work_org[0];
+                w_h.job_title = work_org[1];
+                w_h.start = Convert.ToDateTime(work_org[2]);
+                w_h.fin = Convert.ToDateTime(work_org[3]);
+                work.Add(w_h);
+            }
+            applicant.edu_Hists = edu;
+            applicant.work_Hists = work;
+            XmlSerializer xmlSerializer = null;
+            XmlDocument xmlDocument = null;
+            MemoryStream memoryStream = null;
+            StreamWriter streamWriter = null;
+            var builder = WebApplication.CreateBuilder();
+            string constr = builder.Configuration.GetConnectionString("Default");
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = "insert into [dbo].[emp_prof] (email,edu,work) values (@email,@edu,@work)";
+            sqlCommand.Parameters.AddWithValue("@email", applicant.email);
+            sqlCommand.Parameters.AddWithValue("@edu", SqlDbType.Xml);
+            xmlSerializer= new XmlSerializer(typeof(List<edu_hist>));
+            xmlDocument = new XmlDocument();
+            memoryStream = new MemoryStream();
+            streamWriter = new StreamWriter(memoryStream, Encoding.GetEncoding("utf-16"));
+            xmlSerializer.Serialize(streamWriter, applicant.edu_Hists);
+            memoryStream.Position = 0;
+            xmlDocument.Load(memoryStream);
+            sqlCommand.Parameters["@edu"].Value = xmlDocument.InnerXml;
+            sqlCommand.Parameters.AddWithValue("@work", SqlDbType.Xml);
+            xmlSerializer= new XmlSerializer(typeof(List<work_hist>));
+            xmlDocument = new XmlDocument();
+            memoryStream = new MemoryStream();
+            streamWriter = new StreamWriter(memoryStream, Encoding.GetEncoding("utf-16"));
+            xmlSerializer.Serialize(streamWriter, applicant.work_Hists);
+            memoryStream.Position = 0;
+            xmlDocument.Load(memoryStream);
+            sqlCommand.Parameters["@work"].Value= xmlDocument.InnerXml;
+            sqlCommand.ExecuteNonQuery();
+            return View(applicant);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

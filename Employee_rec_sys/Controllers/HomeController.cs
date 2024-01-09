@@ -199,6 +199,40 @@ namespace Employee_rec_sys.Controllers
             sqlCommand.ExecuteNonQuery();
             return View(applicant);
         }
+        [HttpPost]
+        public IActionResult view_prof(IFormCollection keyValues) 
+        {
+            string em = keyValues["hf_em"];
+            Applicant applicant=new Applicant();
+            applicant.email = em;
+            var builder = WebApplication.CreateBuilder();
+            string constr = builder.Configuration.GetConnectionString("Default");
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = "select * from [dbo].[emp_prof] where email='"+em+"'";
+            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            sqlDataReader.Read();
+            string edu_h =(string)sqlDataReader["edu"], work_h =(string) sqlDataReader["work"];
+            XmlDocument edu_hist= new XmlDocument();
+            XmlDocument work_hist= new XmlDocument();
+            edu_hist.LoadXml(edu_h);
+            work_hist.LoadXml(work_h);
+            List<edu_hist> edu = new List<edu_hist>();
+            foreach (XmlNode edu_history in edu_hist.SelectNodes("/ArrayOfEdu_hist/edu_hist"))
+            {
+                edu.Add(new edu_hist { inst = edu_history["inst"].InnerText, area_of_study = edu_history["area_of_study"].InnerText, start = Convert.ToDateTime(edu_history["start"].InnerText), fin = Convert.ToDateTime(edu_history["fin"].InnerText) });
+            }
+            applicant.edu_Hists = edu;
+            List<work_hist> work = new List<work_hist>();
+            foreach (XmlNode work_history in work_hist.SelectNodes("/ArrayOfWork_hist/work_hist"))
+            {
+                work.Add(new work_hist { org = work_history["org"].InnerText, job_title = work_history["job_title"].InnerText, start = Convert.ToDateTime(work_history["start"].InnerText), fin = Convert.ToDateTime(work_history["fin"].InnerText) });
+            }
+            applicant.work_Hists = work;
+            return View(applicant);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -1,0 +1,16 @@
+﻿@model Applicant
+@{
+    ViewData["Title"] = "view_prof";
+}
+
+<h1>view_prof</h1>
+
+<p>@Model.email</p>
+@foreach(edu_hist edu_Hist in Model.edu_Hists)
+{
+    @edu_Hist.inst @edu_Hist.area_of_study @edu_Hist.start @edu_Hist.fin<br />
+}
+@foreach(work_hist work_Hist in Model.work_Hists)
+{
+    @work_Hist.org @work_Hist.job_title @work_Hist.start @work_Hist.fin<br />
+}

@@ -14,3 +14,10 @@
 {
     @work_Hist.org @work_Hist.job_title @work_Hist.start @work_Hist.fin<br />
 }
+<form method="post" action="add_int_data">
+    <input name="em" type="email" value="@Model.email" /><br />
+    <input name="date" type="date" /><br />
+    <input name="time" type="time" /><br />
+    @Html.TextArea("notes")
+    <input type="submit" />
+</form>

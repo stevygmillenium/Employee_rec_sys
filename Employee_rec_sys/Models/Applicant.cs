@@ -13,6 +13,7 @@
         public DateTime dateTime {  get; set; }
         public List<IFormFile> Files { get; set; }
         public List<appl_files> appl_files { get; set; }
+        public int_data int_Data { get; set; }
     }
     public class edu_hist
     {
@@ -33,5 +34,10 @@
         public string filename { get; set; }
         public string filetype { get; set; }
         public byte[] data { get; set; }
+    }
+    public class int_data 
+    {
+        public DateTime int_date { get; set; }
+        public string notes {  get; set; }
     }
 }

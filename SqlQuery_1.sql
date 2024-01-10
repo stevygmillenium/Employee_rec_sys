@@ -21,3 +21,8 @@ CREATE TABLE [dbo].[emp_prof] (
     [edu]   XML           NULL,
     [work]  XML           NULL
 );
+CREATE TABLE [dbo].[int_data] (
+    [email]    VARCHAR (150) NULL,
+    [int_date] DATETIME      NULL,
+    [notes]    TEXT          NULL
+);

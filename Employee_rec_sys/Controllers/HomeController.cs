@@ -201,17 +201,16 @@ namespace Employee_rec_sys.Controllers
         }
         [HttpPost]
         public IActionResult view_prof(IFormCollection keyValues) 
-        {
-            string em = keyValues["hf_em"];
+        {            
             Applicant applicant=new Applicant();
-            applicant.email = em;
+            applicant.email = keyValues["hf_em"];
             var builder = WebApplication.CreateBuilder();
             string constr = builder.Configuration.GetConnectionString("Default");
             SqlConnection sqlConnection = new SqlConnection(constr);
             sqlConnection.Open();
             SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
             sqlCommand.Connection = sqlConnection;
-            sqlCommand.CommandText = "select * from [dbo].[emp_prof] where email='"+em+"'";
+            sqlCommand.CommandText = "select * from [dbo].[emp_prof] where email='"+applicant.email+"'";
             SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
             sqlDataReader.Read();
             string edu_h =(string)sqlDataReader["edu"], work_h =(string) sqlDataReader["work"];
@@ -232,6 +231,31 @@ namespace Employee_rec_sys.Controllers
             }
             applicant.work_Hists = work;
             return View(applicant);
+        }
+        [HttpPost]
+        public IActionResult add_int_data(IFormCollection keyValues) 
+        {
+            Applicant applicant = new Applicant();
+            applicant.email = keyValues["em"];
+            string date = keyValues["date"], time = keyValues["time"], notes = keyValues["notes"];
+            DateTime dateTime = Convert.ToDateTime(date + " " + time);
+            applicant.int_Data = new int_data { int_date = dateTime, notes = notes };
+            var builder = WebApplication.CreateBuilder();
+            string constr = builder.Configuration.GetConnectionString("Default");
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = "insert into [dbo].[int_data] (email,int_date,notes) values (@email,@int_date,@notes)";
+            sqlCommand.Parameters.AddWithValue("@email", applicant.email);
+            sqlCommand.Parameters.AddWithValue("@int_date", applicant.int_Data.int_date);
+            sqlCommand.Parameters.AddWithValue("@notes", applicant.int_Data.notes);
+            sqlCommand.ExecuteNonQuery();
+            return View(applicant);
+        }
+        public IActionResult view_int_data() 
+        {
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

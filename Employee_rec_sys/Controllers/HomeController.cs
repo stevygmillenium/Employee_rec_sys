@@ -253,9 +253,42 @@ namespace Employee_rec_sys.Controllers
             sqlCommand.ExecuteNonQuery();
             return View(applicant);
         }
-        public IActionResult view_int_data() 
+        [HttpPost]
+        public IActionResult view_int_data(IFormCollection keyValues) 
         {
-            return View();
+            Applicant applicant=new Applicant();
+            applicant.email = keyValues["hf_em"];
+            var builder = WebApplication.CreateBuilder();
+            string constr = builder.Configuration.GetConnectionString("Default");
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = "select * from [dbo].[int_data] where email='"+applicant.email+"'";
+            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+            sqlDataReader.Read();
+            DateTime dateTime =(DateTime) sqlDataReader["int_date"];
+            string notes =(string) sqlDataReader["notes"];
+            applicant.int_Data = new int_data { int_date = dateTime, notes = notes };
+            return View(applicant);
+        }
+        [HttpPost]
+        public IActionResult upd_int_data(IFormCollection keyValues) 
+        {
+            Applicant applicant = new Applicant();
+            applicant.email = keyValues["em"];
+            string date_time = keyValues["date_time"], notes = keyValues["notes"];
+            var builder = WebApplication.CreateBuilder();
+            string constr = builder.Configuration.GetConnectionString("Default");
+            SqlConnection sqlConnection = new SqlConnection(constr);
+            sqlConnection.Open();
+            SqlCommand sqlCommand = new SqlCommand(constr, sqlConnection);
+            sqlCommand.Connection = sqlConnection;
+            sqlCommand.CommandText = "update [dbo].[int_data] set int_date=@int_date,notes=@notes where email='"+applicant.email+"'";
+            sqlCommand.Parameters.AddWithValue("@int_date",Convert.ToDateTime(date_time));
+            sqlCommand.Parameters.AddWithValue("@notes", notes);
+            sqlCommand.ExecuteNonQuery();
+            return View(applicant);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

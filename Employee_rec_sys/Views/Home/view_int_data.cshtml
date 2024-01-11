@@ -5,3 +5,9 @@
 
 <h1>view_int_data</h1>
 
+<form method="post" action="upd_int_data">
+    <input name="em" type="email" value="@Model.email" /><br />
+    <input name="date_time" type="datetime" value="@Model.int_Data.int_date" /><br />
+    @Html.TextArea("notes", Model.int_Data.notes)
+    <input type="submit" value="update" />
+</form>

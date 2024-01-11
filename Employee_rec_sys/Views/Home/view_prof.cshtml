@@ -19,5 +19,9 @@
     <input name="date" type="date" /><br />
     <input name="time" type="time" /><br />
     @Html.TextArea("notes")
-    <input type="submit" />
+    <input type="submit" value="add" />
+</form>
+<form method="post" action="view_int_data">
+    <input name="hf_em" type="hidden" value="@Model.email" />
+    <input type="submit" value="view" />
 </form>

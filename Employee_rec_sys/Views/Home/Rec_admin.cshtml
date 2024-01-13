@@ -39,7 +39,7 @@
     <form method="post" action="ext_file">
         @Html.Hidden("hf")
         @Html.Hidden("hf_em",Model.email)
-        <input type="submit" />
+        <input type="submit" value="extract" />
     </form>
     <form method="post" action="add_prof">
         <label for="edu">education history</label><br />
@@ -47,10 +47,10 @@
         <label for="">work history</label><br />
         @Html.TextArea("work", "org,job title,2001/1/1,2002/1/1", new { @cols = "100", @rows = "2" })<br />
         <input name="p_em" type="email" value="@Model.email" />
-        <input type="submit" />
+        <input type="submit" value="add profile" />
     </form>
     <form method="post" action="view_prof">
         <input name="hf_em" type="hidden" value="@Model.email" />
-        <input type="submit" />
+        <input type="submit" value="view profile" />
     </form>
 }
